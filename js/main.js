@@ -10,7 +10,7 @@ const categorias = {
 
 
 const formulario = {
-    categoria: document.getElementById('inputGroupSelect01'),
+    categoriaNumber: document.getElementById('inputGroupSelect01'),
     descripcion: document.getElementById('descripcion'),
     monto: document.getElementById('monto'),
     fecha: document.getElementById('fecha')
@@ -29,27 +29,26 @@ class Gasto {
 }
 
 function ingrese_gasto() {
-    const categoriaNumero = formulario.categoria.value;
+    const categoriaNumber = formulario.categoriaNumber.value;
     const descripcion = formulario.descripcion.value;
     const monto = Number(formulario.monto.value); 
     const fecha = formulario.fecha.value;
 
-    if (categoriaNumero === "seleccionar" || !descripcion || monto <= 0 || !fecha) {
+
+    if (categoriaNumber === "seleccionar" || !descripcion || monto <= 0 || !fecha) {
         alert("Por favor, completa todos los campos correctamente.");
         return;
     }
 
-    const categoria = categorias[categoriaNumero];
-
+    const categoria = categorias[categoriaNumber];
     const gasto = new Gasto(categoria, descripcion, monto, fecha);
     perfiles[perfilActual].gastos.push(gasto);
 
-    // Eventualmente quiero usar los totales por categoría
+
     if (!perfiles[perfilActual].totalPorCategoria[categoria]) {
         perfiles[perfilActual].totalPorCategoria[categoria] = 0;
     }
     perfiles[perfilActual].totalPorCategoria[categoria] += monto;
-
 
     agregarGastoTabla(gasto);
 
@@ -72,13 +71,13 @@ function agregarGastoTabla(gasto) {
 }
 
 function resetearFormulario() {
-    formulario.categoria.value = 'Seleccionar'; 
+    formulario.categoriaNumber.value = 'Seleccionar'; 
     formulario.descripcion.value = '';
     formulario.monto.value = '';
     formulario.fecha.value = '';
 }
 
-
+// Mostrar gastos al iniciar
 function mostrarGastos() {
     tablaGastosBody.innerHTML = ''; 
     if (perfiles[perfilActual]) {
