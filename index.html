@@ -13,55 +13,72 @@
 
 
 <div class="col-md-12 mb-12 centrar-perfil">
-    <label class="form-label" for="inputGroupSelect01">Seleccionar Perfil</label>
-    <select class="form-select perfil" id="inputGroupSelect01">
-        <option selected>Seleccionar</option>
-        <option value="1">Crear nuevo perfil</option>
+    <label class="form-label" for="perfilSelect">Seleccionar Perfil</label>
+    <select class="form-select" id="perfilSelect">
+        <option selected disabled>Seleccionar</option>
+        <!-- Acá van aparecieron los perfiles -->
     </select>
+    <input type="text" id="nuevoPerfil" class="form-control mt-2" placeholder="Nuevo Perfil" style="display: none;">
+    <button class="btn btn-primary mt-2" id="crearPerfilBtn" style="display: none;">Crear Perfil</button>
 </div>
+
 
 
 <div id="inputGasto" class="container">
-  <form class="row justify-content-center">
-      <div class="col-md-2 mb-3">
-          <label class="form-label" for="inputGroupSelect01">Categoría</label>
-          <select class="form-select" id="inputGroupSelect01">
-              <option selected>Seleccionar</option>
-              <option value="1">Supermercado</option>
-              <option value="2">Médico</option>
-              <option value="3">Transporte</option>
-              <option value="4">Salidas</option>
-              <option value="5">Viajes</option>
-              <option value="6">Varios</option>
-          </select>
-      </div>
-
-      <div class="col-md-3 mb-3">
-          <label class="form-label" for="descripcion">Descripción</label>
-          <input type="text" class="form-control" id="descripcion" placeholder="Descripción del gasto">
-      </div>
-
-      <div class="col-md-2 mb-3">
-          <label class="form-label" for="monto">Monto</label>
-          <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="number" class="form-control" id="monto" placeholder="Ingrese monto">
-          </div>
-      </div>
-
-      <div class="col-md-2 mb-3">
-          <label class="form-label" for="fecha">Fecha</label>
-          <input id="fecha" type="date" class="form-control">
-      </div>
-
+    <form class="row justify-content-center" id="form-gasto">
+        <div class="col-md-2 mb-3">
+            <label class="form-label" for="inputGroupSelect01">Categoría</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>Seleccionar</option>
+                <option value="1">Supermercado</option>
+                <option value="2">Médico</option>
+                <option value="3">Transporte</option>
+                <option value="4">Salidas</option>
+                <option value="5">Viajes</option>
+                <option value="6">Varios</option>
+            </select>
+        </div>
+  
+        <div class="col-md-3 mb-3">
+            <label class="form-label" for="descripcion">Descripción</label>
+            <input type="text" class="form-control" id="descripcion" placeholder="Descripción del gasto">
+        </div>
+  
+        <div class="col-md-2 mb-3">
+            <label class="form-label" for="monto">Monto</label>
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" id="monto" placeholder="Ingrese monto" min="0">
+            </div>
+        </div>
+  
+        <div class="col-md-2 mb-3">
+            <label class="form-label" for="fecha">Fecha</label>
+            <input id="fecha" type="date" class="form-control">
+        </div>
+  
       <div class="col-12 text-center">
-          <input type="button" value="Agregar Gasto" class="btn btn-primary">
+        <input type="button" value="Agregar Gasto" class="btn btn-primary" id="btn-agregar-gasto">
       </div>
-  </form>
-</div>
-
-
-
+    </form>
+  
+    <!-- Tabla gastos -->
+    <div class="row mt-4">
+      <div class="col-md-8 mx-auto">
+        <table class="table table-striped" id="tabla-gastos">
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Descripción</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

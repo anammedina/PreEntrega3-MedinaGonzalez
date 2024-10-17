@@ -1,30 +1,57 @@
-let perfilActual = null;  // Variable global para el perfil seleccionado
+let perfilActual = null;
+let perfiles = JSON.parse(localStorage.getItem('perfiles')) || {};  
 
-function seleccionarPerfil() {
-    let hayPerfiles = false;
+const perfilSelect = document.getElementById('perfilSelect');
+const nuevoPerfilInput = document.getElementById('nuevoPerfil');
+const crearPerfilBtn = document.getElementById('crearPerfilBtn');
 
-    for (let perfil in perfiles) {
-        if (perfiles[perfil]) {
-            hayPerfiles = true;
-            break;
-        }
-    }
+function cargarPerfiles() {
+    perfilSelect.innerHTML = '<option selected disabled>Seleccionar</option>';
+    Object.keys(perfiles).forEach(perfil => {
+        const option = document.createElement('option');
+        option.value = perfil;
+        option.textContent = perfil;
+        perfilSelect.appendChild(option);
+    });
 
-    if (!hayPerfiles) {
-        let nuevoPerfil = prompt("No tienes perfiles. Por favor, crea uno:");
-        perfiles[nuevoPerfil] = { gastos: [], totalPorCategoria: {} }; // Inicializa el nuevo perfil
-        perfilActual = nuevoPerfil;  // Asigna el nuevo perfil como el perfil actual
-        alert(`Perfil '${nuevoPerfil}' creado.`);
-    } else {
-        let perfilSeleccionado = prompt("Seleccione un perfil existente o escribe uno nuevo:");
-
-        if (!perfiles[perfilSeleccionado]) {
-            perfiles[perfilSeleccionado] = { gastos: [], totalPorCategoria: {} };
-            perfilActual = perfilSeleccionado;  // Asigna el perfil seleccionado como el perfil actual
-            alert(`Perfil '${perfilSeleccionado}' creado.`);
-        } else {
-            perfilActual = perfilSeleccionado;  // Asigna el perfil existente como el perfil actual
-            alert(`Accediste al perfil '${perfilSeleccionado}'.`);
-        }
-    }
+    const crearPerfilOption = document.createElement('option');
+    crearPerfilOption.value = "nuevo";
+    crearPerfilOption.textContent = "Crear nuevo perfil";
+    perfilSelect.appendChild(crearPerfilOption);
 }
+
+perfilSelect.addEventListener('change', () => {
+    if (perfilSelect.value === "nuevo") {
+        // Campo para nuevo perfil
+        nuevoPerfilInput.style.display = 'block';
+        crearPerfilBtn.style.display = 'block';
+    } else {
+
+        perfilActual = perfilSelect.value;
+        nuevoPerfilInput.style.display = 'none';
+        crearPerfilBtn.style.display = 'none';
+        mostrarGastos(); 
+    }
+});
+
+// Crear nuevo perfil
+crearPerfilBtn.addEventListener('click', () => {
+    const nuevoPerfil = nuevoPerfilInput.value.trim();
+    if (nuevoPerfil && !perfiles[nuevoPerfil]) {
+        perfiles[nuevoPerfil] = { gastos: [], totalPorCategoria: {} };
+        perfilActual = nuevoPerfil;
+
+        localStorage.setItem('perfiles', JSON.stringify(perfiles));
+
+        cargarPerfiles();
+
+        perfilSelect.value = nuevoPerfil;
+
+        nuevoPerfilInput.style.display = 'none';
+        crearPerfilBtn.style.display = 'none';
+    } else {
+        alert("El nombre de perfil no es válido o ya existe.");
+    }
+});
+
+cargarPerfiles();

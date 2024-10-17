@@ -29,10 +29,32 @@ h1 {
     align-items: center;
     justify-content: center;
     margin-top: 15px;
+
 }
 
 .perfil  {
     max-width: 150px;
     width: 150px;
+
+}
+
+#perfilSelect{
+    max-width: 250px;
+    width: 250px;
+
+}
+
+
+#nuevoPerfil {
+    max-width: 250px;
+    width: 250px;
+
+}
+
+#tabla-gastos {
+
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 
 }

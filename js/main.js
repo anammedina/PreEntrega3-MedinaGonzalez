@@ -1,9 +1,23 @@
-let gastos = [];
-let index = 0;
+const categorias = {
+    1: "Supermercado",
+    2: "Médico",
+    3: "Transporte",
+    4: "Salidas",
+    5: "Viajes",
+    6: "Varios"
+};
 
-const categorias = ['supermercado', 'medico', 'transporte', 'salidas', 'viajes', 'varios'];
 
-let perfiles = {}
+
+const formulario = {
+    categoria: document.getElementById('inputGroupSelect01'),
+    descripcion: document.getElementById('descripcion'),
+    monto: document.getElementById('monto'),
+    fecha: document.getElementById('fecha')
+};
+
+const botonAgregarGasto = document.getElementById('btn-agregar-gasto');
+const tablaGastosBody = document.querySelector('#tabla-gastos tbody');
 
 class Gasto {
     constructor(categoria, descripcion, monto, fecha) {
@@ -14,57 +28,69 @@ class Gasto {
     }
 }
 
-
-
 function ingrese_gasto() {
-    let categoria;
-    while (true) {
-        categoria = prompt("Ingrese la categoría del gasto").toLowerCase();
-        if (categorias.includes(categoria)) {
-            break;
-        } else {
-            alert("Categoría no válida. Las opciones son: " + categorias.join(', ') + '.');
-        }
+    const categoriaNumero = formulario.categoria.value;
+    const descripcion = formulario.descripcion.value;
+    const monto = Number(formulario.monto.value); 
+    const fecha = formulario.fecha.value;
+
+    if (categoriaNumero === "seleccionar" || !descripcion || monto <= 0 || !fecha) {
+        alert("Por favor, completa todos los campos correctamente.");
+        return;
     }
 
-    let descripcion = prompt("Ingrese una descripción del gasto");
-
-    let monto;
-    while (true) {
-        monto = Number(prompt("Ingrese el monto del gasto"));
-        if (!isNaN(monto) && monto > 0) {
-            break;
-        } else {
-            alert("Por favor, ingrese un número válido para el monto");
-        }
-    }
-
-    let fecha = prompt("Ingrese la fecha del gasto (formato DD-MM-AAAA)");
+    const categoria = categorias[categoriaNumero];
 
     const gasto = new Gasto(categoria, descripcion, monto, fecha);
     perfiles[perfilActual].gastos.push(gasto);
 
+    // Eventualmente quiero usar los totales por categoría
     if (!perfiles[perfilActual].totalPorCategoria[categoria]) {
         perfiles[perfilActual].totalPorCategoria[categoria] = 0;
     }
-   
     perfiles[perfilActual].totalPorCategoria[categoria] += monto;
 
+
+    agregarGastoTabla(gasto);
+
+
+    localStorage.setItem('perfiles', JSON.stringify(perfiles));
+
+    resetearFormulario();
+}
+
+function agregarGastoTabla(gasto) {
+    const fila = document.createElement('tr');
+    fila.innerHTML = `
+      <td>${gasto.categoria}</td>
+      <td>${gasto.descripcion}</td>
+      <td>$${gasto.monto.toFixed(2)}</td>
+      <td>${gasto.fecha}</td>
+    `;
+    console.log("Añadiendo fila:", fila);
+    tablaGastosBody.appendChild(fila);
+}
+
+function resetearFormulario() {
+    formulario.categoria.value = 'Seleccionar'; 
+    formulario.descripcion.value = '';
+    formulario.monto.value = '';
+    formulario.fecha.value = '';
+}
+
+
+function mostrarGastos() {
+    tablaGastosBody.innerHTML = ''; 
+    if (perfiles[perfilActual]) {
+        perfiles[perfilActual].gastos.forEach(gasto => {
+            agregarGastoTabla(gasto);
+        });
+    }
 }
 
 function main() {
-    seleccionarPerfil();  
 
-    let continuar = true;
-    while (continuar) {
-        ingrese_gasto(); 
-
-        continuar = confirm("¿Desea agregar otro gasto a este perfil?");
-    }
-
-    console.table(perfiles);
+    botonAgregarGasto.addEventListener('click', ingrese_gasto);
 }
 
 main();
-
-//MEJORAR COMO TRAE LOS RESULTADOS
