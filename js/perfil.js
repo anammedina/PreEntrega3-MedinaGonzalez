@@ -1,57 +1,79 @@
+let perfiles = JSON.parse(localStorage.getItem('perfiles')) || {};
 let perfilActual = null;
-let perfiles = JSON.parse(localStorage.getItem('perfiles')) || {};  
 
 const perfilSelect = document.getElementById('perfilSelect');
 const nuevoPerfilInput = document.getElementById('nuevoPerfil');
 const crearPerfilBtn = document.getElementById('crearPerfilBtn');
 
-function cargarPerfiles() {
-    perfilSelect.innerHTML = '<option selected disabled>Seleccionar</option>';
-    Object.keys(perfiles).forEach(perfil => {
-        const option = document.createElement('option');
-        option.value = perfil;
-        option.textContent = perfil;
-        perfilSelect.appendChild(option);
-    });
-
-    const crearPerfilOption = document.createElement('option');
-    crearPerfilOption.value = "nuevo";
-    crearPerfilOption.textContent = "Crear nuevo perfil";
-    perfilSelect.appendChild(crearPerfilOption);
-}
-
-perfilSelect.addEventListener('change', () => {
-    if (perfilSelect.value === "nuevo") {
-        // Campo para nuevo perfil
-        nuevoPerfilInput.style.display = 'block';
-        crearPerfilBtn.style.display = 'block';
+perfilSelect.addEventListener('change', function () {
+    perfilActual = perfilSelect.value;
+    if (perfilActual === "nuevo") {
+        nuevoPerfilInput.style.display = "block";
+        crearPerfilBtn.style.display = "block";
     } else {
-
-        perfilActual = perfilSelect.value;
-        nuevoPerfilInput.style.display = 'none';
-        crearPerfilBtn.style.display = 'none';
-        mostrarGastos(); 
+        nuevoPerfilInput.style.display = "none";
+        crearPerfilBtn.style.display = "none";
+        cargarGastosDelPerfil(perfilActual);
+        actualizarGrafico();
+        actualizarTotalGastos();
     }
 });
 
-// Crear nuevo perfil
-crearPerfilBtn.addEventListener('click', () => {
+crearPerfilBtn.addEventListener('click', function () {
     const nuevoPerfil = nuevoPerfilInput.value.trim();
     if (nuevoPerfil && !perfiles[nuevoPerfil]) {
         perfiles[nuevoPerfil] = { gastos: [], totalPorCategoria: {} };
-        perfilActual = nuevoPerfil;
-
         localStorage.setItem('perfiles', JSON.stringify(perfiles));
-
-        cargarPerfiles();
-
+        agregarPerfilAlSelect(nuevoPerfil);
         perfilSelect.value = nuevoPerfil;
-
-        nuevoPerfilInput.style.display = 'none';
-        crearPerfilBtn.style.display = 'none';
-    } else {
-        alert("El nombre de perfil no es válido o ya existe.");
+        perfilActual = nuevoPerfil;
+        nuevoPerfilInput.value = '';
+        nuevoPerfilInput.style.display = "none";
+        crearPerfilBtn.style.display = "none";
+        cargarGastosDelPerfil(perfilActual);
+        actualizarGrafico();
+        actualizarTotalGastos();
     }
 });
+
+function cargarPerfiles() {
+    const defaultOption = document.createElement('option');
+    defaultOption.text = "Seleccionar";
+    defaultOption.selected = true;
+    defaultOption.disabled = true;
+    perfilSelect.add(defaultOption);
+
+    const nuevoPerfilOption = document.createElement('option');
+    nuevoPerfilOption.value = "nuevo";
+    nuevoPerfilOption.text = "Crear Nuevo Perfil";
+    perfilSelect.add(nuevoPerfilOption);
+
+    for (const perfil in perfiles) {
+        agregarPerfilAlSelect(perfil);
+    }
+}
+
+function agregarPerfilAlSelect(perfil) {
+    const option = document.createElement('option');
+    option.value = perfil;
+    option.textContent = perfil;
+    perfilSelect.appendChild(option);
+}
+
+function cargarGastosDelPerfil(perfil) {
+    const gastos = perfiles[perfil].gastos;
+    tablaGastosBody.innerHTML = ''; // Limpiar tabla
+    gastos.forEach(agregarGastoTabla);
+
+    // Agrega la fila de totales nuevamente al final
+    const totalFila = document.getElementById('total-fila');
+    const totalUsdFila = document.getElementById('total-usd-fila');
+    if (totalFila && totalUsdFila) {
+        tablaGastosBody.appendChild(totalFila);
+        tablaGastosBody.appendChild(totalUsdFila);
+    }
+
+    actualizarTotalGastos();
+}
 
 cargarPerfiles();

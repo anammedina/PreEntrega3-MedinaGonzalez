@@ -58,3 +58,13 @@ h1 {
     text-align: center;
 
 }
+
+
+#containerGrafico {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+
+}
+

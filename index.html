@@ -74,16 +74,38 @@
               <th>Fecha</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            <tr id="total-fila">
+              <td colspan="2"></td>
+              <td id="total-gastos">$0.00</td>
+              <td>Total</td>
+          </tr>
+          <tr id="total-usd-fila">
+              <td colspan="2"></td>
+              <td id="total-gastos-usd">$0.00</td>
+              <td>Total en USD</td>
+          </tr>
+
+
+          </tbody>
         </table>
       </div>
     </div>
   </div>
 
+  <div id="containerGrafico">
+
+    <div id="graficoGastos"></div>
+  </div>
+ 
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <script src="./js/perfil.js"></script>
+<script src="./js/dolar.js"></script>
 <script src="./js/main.js"></script>
 </body>
 </html>
